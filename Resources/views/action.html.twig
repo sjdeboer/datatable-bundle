@@ -1,0 +1,29 @@
+{% for group in groups %}
+    {% set groupAttr = '' %}
+    {% if group.attr is defined %}
+        {% for attr, value in group.attr %}
+            {% set groupAttr = groupAttr ~ ' ' ~ attr ~ '="' ~ value ~ '"' %}
+        {% endfor %}
+    {% endif %}
+    <div{{ groupAttr|raw }}>
+        {% for option in group.options %}
+            {% set optionAttr = '' %}
+            {% if option.attr is defined %}
+                {% for attr, value in option.attr %}
+                    {% set optionAttr = optionAttr ~ ' ' ~ attr ~ '="' ~ value ~ '"' %}
+                {% endfor %}
+            {% endif %}
+            {% if option.icon is defined and option.icon is not empty %}
+                {% set optionAttr = optionAttr ~ ' title="' ~ option.label ~ '"' %}
+            {% endif %}
+
+            <a{{ optionAttr|raw }}>
+                {% if option.icon is defined and option.icon is not empty %}
+                    <i class="{{ option.icon }}"></i>
+                {% else %}
+                    {{ option.label }}
+                {% endif %}
+            </a>
+        {% endfor %}
+    </div>
+{% endfor %}

@@ -1,0 +1,11 @@
+services:
+    sdeboer_data_table.factory:
+        class: Sjdeboer\DataTableBundle\DataTable\DataTableFactory
+        arguments:
+            - '@request_stack'
+            - '@doctrine'
+            - '@twig'
+            - '@router'
+            - '@session'
+            - { table_class: '%sdeboer_data_table.default_table_class%', datatables_options: '%sdeboer_data_table.default_datatables_options%' }
+        public: true
