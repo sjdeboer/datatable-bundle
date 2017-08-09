@@ -65,7 +65,7 @@ class DataTable
         $qb = clone $queryBuilder;
 
         $alias = $qb->getRootAliases();
-        $qb->select('COUNT(:alias) as total')->setParameter('alias', $alias[0]);
+        $qb->select('COUNT(' . $alias[0] . ') as total');
 
         $total = $qb->getQuery()->getResult();
         $length = count($total);
