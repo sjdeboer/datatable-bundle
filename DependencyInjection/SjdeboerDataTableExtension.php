@@ -21,8 +21,10 @@ class SjdeboerDataTableExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('sdeboer_data_table.default_table_class', $config['default_table_class']);
-        $container->setParameter('sdeboer_data_table.default_datatables_options', $config['default_datatables_options']);
+        //$container->setParameter('sdeboer_data_table.default_table_class', $config['default_table_class']);
+        //$container->setParameter('sdeboer_data_table.default_datatables_options', $config['default_datatables_options']);
+
+        $container->setParameter('sdeboer_data_table', $config);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');

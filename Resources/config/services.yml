@@ -6,6 +6,5 @@ services:
             - '@doctrine'
             - '@twig'
             - '@router'
-            - '@session'
-            - { table_class: '%sdeboer_data_table.default_table_class%', datatables_options: '%sdeboer_data_table.default_datatables_options%' }
+            - '%sdeboer_data_table%'
         public: true

@@ -6,7 +6,6 @@ use Sjdeboer\DataTableBundle\Builder\TableBuilder;
 use Sjdeboer\DataTableBundle\Exception\DataTableException;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -28,8 +27,8 @@ class DataTableFactory
     /** @var Router */
     public $router;
 
-    /** @var Session */
-    public $session;
+    /** @var array */
+    public $config;
 
     /** @var array */
     private $optionsDefined = ['id', 'query_builder', 'datatables_options', 'row_id', 'row_class', 'row_data', 'row_attr', 'table_class'];
@@ -61,20 +60,18 @@ class DataTableFactory
      * @param Registry $doctrine
      * @param \Twig_Environment $twig
      * @param Router $router
-     * @param Session $session
-     * @param array $defaultOptions
+     * @param array $config
+     * @internal param array $defaultOptions
      */
-    public function __construct(RequestStack $requestStack, Registry $doctrine, \Twig_Environment $twig, Router $router, Session $session, array $defaultOptions)
+    public function __construct(RequestStack $requestStack, Registry $doctrine, \Twig_Environment $twig, Router $router, array $config)
     {
         $this->requestStack = $requestStack;
         $this->doctrine = $doctrine;
         $this->twig = $twig;
         $this->router = $router;
-        $this->session = $session;
+        $this->config = $config;
 
         $this->optionDefaults['id'] = 'auto_' . bin2hex(random_bytes(6));
-        $this->optionDefaults['table_class'] = $defaultOptions['table_class'];
-        $this->optionDefaults['datatables_options'] = $defaultOptions['datatables_options'];
     }
 
     /**

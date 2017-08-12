@@ -29,6 +29,9 @@ class DataTable
     /** @var Router */
     private $router;
 
+    /** @var array */
+    private $config;
+
     /** @var TableBuilderInterface */
     private $builder;
 
@@ -50,6 +53,7 @@ class DataTable
         $this->doctrine = $factory->doctrine;
         $this->twig = $factory->twig;
         $this->router = $factory->router;
+        $this->config = $factory->config;
         $this->builder = $builder;
         $this->options = $options;
 
@@ -160,10 +164,17 @@ class DataTable
             $columnLabels[] = $column->createHeadView();
         }
 
+        $tableClass = '';
+        if (array_key_exists('table_class', $this->options)) {
+            $tableClass = $this->options['table_class'];
+        } elseif (array_key_exists('default_table_class', $this->config)) {
+            $tableClass = $this->config['default_table_class'];
+        }
+
         return $this->twig->render('@SjdeboerDataTable/body.html.twig', [
             'name' => $this->tableID,
             'columnLabels' => $columnLabels,
-            'tableClass' => (array_key_exists('table_class', $this->options) ? $this->options['table_class'] : ''),
+            'tableClass' => $tableClass,
         ]);
     }
 
@@ -172,6 +183,14 @@ class DataTable
      */
     private function createViewJS()
     {
+        $dataTableOptions = [];
+        if (array_key_exists('default_datatables_options', $this->config) && is_array($this->config['default_datatables_options'])) {
+            $dataTableOptions = $this->config['default_datatables_options'];
+        }
+        if (array_key_exists('datatables_options', $this->options) && is_array($this->options['datatables_options'])) {
+            $dataTableOptions = array_replace_recursive($dataTableOptions, $this->options['datatables_options']);
+        }
+
         $columnOptions = [];
         $i = 0;
         foreach ($this->builder as $column) {
@@ -184,7 +203,7 @@ class DataTable
             $i++;
         }
 
-        $dataTableOptions = [
+        $dataTableOptions = array_replace_recursive($dataTableOptions, [
             'processing' => true,
             'serverSide' => true,
             'ajax' => [
@@ -194,12 +213,7 @@ class DataTable
                 ],
             ],
             'columns' => $columnOptions,
-            'searchDelay' => 400,
-        ];
-
-        if (array_key_exists('datatables_options', $this->options) && is_array($this->options['datatables_options'])) {
-            $dataTableOptions = array_merge($dataTableOptions, $this->options['datatables_options']);
-        }
+        ]);
 
         $output = $this->twig->render('@SjdeboerDataTable/js.html.twig', [
             'name' => $this->tableID,
