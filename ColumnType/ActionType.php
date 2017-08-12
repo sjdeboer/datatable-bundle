@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Class ActionType
  * @package Sjdeboer\DataTableBundle\ColumnType
  */
-class ActionType implements ColumnTypeInterface
+class ActionType extends ColumnType implements ColumnTypeInterface
 {
     /** @var DataTableFactory */
     private $factory;
@@ -32,24 +32,10 @@ class ActionType implements ColumnTypeInterface
     public function setOptions(array $options = [])
     {
         $resolver = new OptionsResolver();
+        $this->setDefaults($resolver, $options);
 
         $resolver->setRequired(['closure']);
-        $resolver->setDefined(['label', 'column_options']);
-
         $resolver->setAllowedTypes('closure', 'callable');
-        $resolver->setAllowedTypes('label', 'string');
-        $resolver->setAllowedTypes('column_options', 'array');
-
-        $defaults = [
-            'label' => '',
-            'column_options' => [
-                'orderable' => false,
-            ],
-        ];
-        $resolver->setDefaults($defaults);
-        if (array_key_exists('column_options', $options)) {
-            $options['column_options'] = array_merge($defaults['column_options'], $options['column_options']);
-        }
 
         $this->options = $resolver->resolve($options);
 

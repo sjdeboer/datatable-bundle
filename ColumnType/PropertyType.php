@@ -3,12 +3,13 @@ namespace Sjdeboer\DataTableBundle\ColumnType;
 
 use Sjdeboer\DataTableBundle\DataTable\DataTableFactory;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
- * Class ClosureType
+ * Class PropertyType
  * @package Sjdeboer\DataTableBundle\ColumnType
  */
-class ClosureType extends ColumnType implements ColumnTypeInterface
+class PropertyType extends ColumnType implements ColumnTypeInterface
 {
     /** @var DataTableFactory */
     private $factory;
@@ -33,8 +34,8 @@ class ClosureType extends ColumnType implements ColumnTypeInterface
         $resolver = new OptionsResolver();
         $this->setDefaults($resolver, $options);
 
-        $resolver->setRequired(['closure']);
-        $resolver->setAllowedTypes('closure', 'callable');
+        $resolver->setRequired(['property']);
+        $resolver->setAllowedTypes('property', 'string');
 
         $this->options = $resolver->resolve($options);
 
@@ -62,6 +63,7 @@ class ClosureType extends ColumnType implements ColumnTypeInterface
      */
     public function createRowView($row)
     {
-        return $this->options['closure']($row, $this->factory->router);
+        $accessor = PropertyAccess::createPropertyAccessor();
+        return $accessor->getValue($row, $this->options['property']);
     }
 }
