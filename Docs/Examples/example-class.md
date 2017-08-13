@@ -27,8 +27,8 @@ class PersonTable extends AbstractTable
      */
     public function buildTable(TableBuilderInterface $builder, array $options)
     {
-        // Add a column of type ClosureType. You must provide this column type with a closure that
-        // receives the entity as the first parameter and should return the contents of the table cell.
+        // Add a column of type PropertyType. You must provide this column type with a string representing the
+        // name of the property of the result entity, or the key of the result array to use.
         $builder->add(PropertyType::class, [
             'label' => 'Lastname',
             'property' => 'lastName',
