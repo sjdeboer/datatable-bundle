@@ -64,6 +64,13 @@ class PropertyType extends ColumnType implements ColumnTypeInterface
     public function createRowView($row)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
-        return $accessor->getValue($row, $this->options['property']);
+
+        if (is_array($row) && !preg_match('/[\[\]]+/', $this->options['property'])) {
+            $propertyPath = '[' . $this->options['property'] . ']';
+        } else {
+            $propertyPath = &$this->options['property'];
+        }
+
+        return $accessor->getValue($row, $propertyPath);
     }
 }

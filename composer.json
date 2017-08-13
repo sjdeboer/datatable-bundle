@@ -1,7 +1,7 @@
 {
   "name": "sjdeboer/datatable-bundle",
   "description": "DataTableBundle is a Symfony Bundle that let's you combine Symfony Framework and Doctrine with DataTables plug-in for jQuery.",
-  "version": "1.0.0",
+  "version": "1.0.0-beta.1",
   "authors": [
     {
       "name": "Sjoert de Boer",
@@ -12,7 +12,7 @@
     "php": ">=5.5.9",
     "doctrine/doctrine-bundle": "^1.4",
     "doctrine/orm": "^2.4.8",
-    "symfony/symfony": "^2.8",
+    "symfony/symfony": "^2.8||^3.0",
     "twig/twig": "^1.0||^2.0"
   },
   "autoload": {

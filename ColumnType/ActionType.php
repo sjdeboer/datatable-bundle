@@ -71,18 +71,18 @@ class ActionType extends ColumnType implements ColumnTypeInterface
 
         $groupResolver = new OptionsResolver();
         $groupResolver->setDefined(['attr']);
-        $groupResolver->setRequired(['options']);
+        $groupResolver->setRequired(['actions']);
         $groupResolver->setAllowedTypes('attr', 'array');
-        $groupResolver->setAllowedTypes('options', 'array');
+        $groupResolver->setAllowedTypes('actions', 'array');
         $groupResolver->setDefaults([
             'attr' => [],
-            'options' => []
+            'actions' => []
         ]);
 
-        $optionResolver = new OptionsResolver();
-        $optionResolver->setDefined(['attr', 'icon']);
-        $optionResolver->setRequired(['label']);
-        $groupResolver->setDefaults([
+        $actionResolver = new OptionsResolver();
+        $actionResolver->setDefined(['attr', 'icon']);
+        $actionResolver->setRequired(['label']);
+        $actionResolver->setDefaults([
             'attr' => [],
             'icon' => null,
             'label' => '',
@@ -94,11 +94,11 @@ class ActionType extends ColumnType implements ColumnTypeInterface
             }
             $groupResolver->resolve($group);
 
-            foreach ($group['options'] as $option) {
-                if (!is_array($option)) {
+            foreach ($group['actions'] as $action) {
+                if (!is_array($action)) {
                     throw new DataTableException('Action should be an array');
                 }
-                $optionResolver->resolve($option);
+                $actionResolver->resolve($action);
             }
         }
 

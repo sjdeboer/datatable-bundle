@@ -6,7 +6,7 @@
         {% endfor %}
     {% endif %}
     <div{{ groupAttr|raw }}>
-        {% for option in group.options %}
+        {% for option in group.actions %}
             {% set optionAttr = '' %}
             {% if option.attr is defined %}
                 {% for attr, value in option.attr %}
