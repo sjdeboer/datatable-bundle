@@ -90,7 +90,7 @@ class DataTableFactory
             $resolver->setAllowedValues($option, $values);
         }
         $resolver->setNormalizer('id', function(Options $options, $value) {
-            return str_replace('/[^A-Za-z0-9\_]+/', '', (string)$value);
+            return preg_replace('/[^A-Za-z0-9\_]+/', '', (string)$value);
         });
 
         return $resolver;

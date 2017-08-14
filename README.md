@@ -46,7 +46,7 @@ You should now be ready to start creating tables!
 Usage
 -----
 
-Creating tables is very similar to creating forms in Symfony. So chances are you'll feel right at home.s
+Creating tables is very similar to creating forms in Symfony. So chances are you'll feel right at home.
 
 ### Examples
 
