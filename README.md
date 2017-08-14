@@ -1,7 +1,7 @@
 DataTableBundle
 ===============
 
-DataTableBundle is a Symfony Bundle that let's you combine [Symfony Framework](https://symfony.com/) and [Doctrine](http://www.doctrine-project.org/) with [DataTables plug-in for jQuery](https://github.com/DataTables/DataTables).
+DataTableBundle is a Symfony Bundle that lets you combine [Symfony Framework](https://symsfony.com/) and [Doctrine](http://www.doctrine-project.org/) with [DataTables plug-in for jQuery](https://github.com/DataTables/DataTables).
 
 Installation
 ------------
@@ -46,7 +46,7 @@ You should now be ready to start creating tables!
 Usage
 -----
 
-Creating tables is very similar to creating forms in Symfony. So chances are you will feel right at home.
+Creating tables is very similar to creating forms in Symfony. So chances are you'll feel right at home.s
 
 ### Examples
 

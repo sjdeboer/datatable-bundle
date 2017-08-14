@@ -1,5 +1,5 @@
-Simple Example
-==============
+Table defined as a PHP class
+============================
 
 Table class
 -----------
