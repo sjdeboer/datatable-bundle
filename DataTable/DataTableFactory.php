@@ -1,11 +1,10 @@
 <?php
 namespace Sjdeboer\DataTableBundle\DataTable;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Sjdeboer\DataTableBundle\Builder\TableBuilder;
 use Sjdeboer\DataTableBundle\Exception\DataTableException;
+use Sjdeboer\DataTableBundle\Source\SourceInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,12 +14,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class DataTableFactory
 {
-    /** @var RequestStack */
-    public $requestStack;
-
-    /** @var Registry */
-    public $doctrine;
-
     /** @var \Twig_Environment */
     public $twig;
 
@@ -31,15 +24,15 @@ class DataTableFactory
     public $config;
 
     /** @var array */
-    private $optionsDefined = ['id', 'query_builder', 'datatables_options', 'row_id', 'row_class', 'row_data', 'row_attr', 'table_class'];
+    private $optionsDefined = ['id', 'datatables_options', 'row_id', 'row_class', 'row_data', 'row_attr', 'table_class'];
 
     /** @var array */
-    private $optionsRequired = ['data_class'];
+    private $optionsRequired = ['data_source'];
 
     /** @var array */
     private $optionsAllowedTypes = [
         'id' => 'string',
-        'query_builder' => 'callable',
+        'data_source' => SourceInterface::class,
         'datatables_options' => 'array',
         'row_id' => 'callable',
         'row_class' => 'callable',
@@ -56,20 +49,15 @@ class DataTableFactory
 
     /**
      * DataTableFactory constructor.
-     * @param RequestStack $requestStack
-     * @param Registry $doctrine
+     * @param array $config
      * @param \Twig_Environment $twig
      * @param Router $router
-     * @param array $config
-     * @internal param array $defaultOptions
      */
-    public function __construct(RequestStack $requestStack, Registry $doctrine, \Twig_Environment $twig, Router $router, array $config)
+    public function __construct(array $config, \Twig_Environment $twig, Router $router)
     {
-        $this->requestStack = $requestStack;
-        $this->doctrine = $doctrine;
+        $this->config = $config;
         $this->twig = $twig;
         $this->router = $router;
-        $this->config = $config;
 
         $this->optionDefaults['id'] = 'auto_' . bin2hex(random_bytes(6));
     }

@@ -2,9 +2,7 @@ services:
     sdeboer_data_table.factory:
         class: Sjdeboer\DataTableBundle\DataTable\DataTableFactory
         arguments:
-            - '@request_stack'
-            - '@doctrine'
+            - '%sdeboer_data_table%'
             - '@twig'
             - '@router'
-            - '%sdeboer_data_table%'
         public: true

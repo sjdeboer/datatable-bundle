@@ -4,10 +4,10 @@ namespace Sjdeboer\DataTableBundle\ColumnType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class ColumnType
+ * Trait ColumnTypeDefault
  * @package Sjdeboer\DataTableBundle\ColumnType
  */
-abstract class ColumnType
+trait ColumnTypeDefault
 {
     /**
      * @param OptionsResolver $resolver

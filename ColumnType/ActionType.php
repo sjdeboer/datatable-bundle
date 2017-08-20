@@ -9,8 +9,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Class ActionType
  * @package Sjdeboer\DataTableBundle\ColumnType
  */
-class ActionType extends ColumnType implements ColumnTypeInterface
+class ActionType implements ColumnTypeInterface
 {
+    use ColumnTypeDefault;
+
     /** @var DataTableFactory */
     private $factory;
 

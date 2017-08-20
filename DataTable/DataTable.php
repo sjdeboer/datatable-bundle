@@ -1,14 +1,11 @@
 <?php
 namespace Sjdeboer\DataTableBundle\DataTable;
 
-use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use Sjdeboer\DataTableBundle\Builder\TableBuilderInterface;
 use Sjdeboer\DataTableBundle\ColumnType\ColumnTypeInterface;
 use Sjdeboer\DataTableBundle\Exception\DataTableException;
+use Sjdeboer\DataTableBundle\Source\SourceInterface;
 use Sjdeboer\DataTableBundle\View\TableView;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -20,14 +17,8 @@ class DataTable
     /** @var Request */
     private $request;
 
-    /** @var Registry */
-    private $doctrine;
-
     /** @var \Twig_Environment */
     private $twig;
-
-    /** @var Router */
-    private $router;
 
     /** @var array */
     private $config;
@@ -49,10 +40,8 @@ class DataTable
      */
     public function __construct(DataTableFactory $factory, TableBuilderInterface $builder, array $options = [])
     {
-        $this->request = $factory->requestStack->getCurrentRequest();
-        $this->doctrine = $factory->doctrine;
+        $this->request = Request::createFromGlobals();
         $this->twig = $factory->twig;
-        $this->router = $factory->router;
         $this->config = $factory->config;
         $this->builder = $builder;
         $this->options = $options;
@@ -61,62 +50,25 @@ class DataTable
     }
 
     /**
-     * @param QueryBuilder $queryBuilder
-     * @return int
-     */
-    public function getTotal(QueryBuilder $queryBuilder)
-    {
-        $qb = clone $queryBuilder;
-
-        $alias = $qb->getRootAliases();
-        $qb->select('COUNT(' . $alias[0] . ') as total');
-
-        $total = $qb->getQuery()->getResult();
-        $length = count($total);
-
-        return (int)($length > 1 ? $length : $total[0]['total']);
-    }
-
-    /**
      * @return array
      * @throws DataTableException
      */
     private function getData()
     {
-        $query = $this->request->query;
+        if (!($this->options['data_source'] instanceof SourceInterface)) {
+            throw new DataTableException('');
+        }
 
         $hasRowID = array_key_exists('row_id', $this->options);
         $hasRowClass = array_key_exists('row_class', $this->options);
         $hasRowData = array_key_exists('row_data', $this->options);
         $hasRowAttr = array_key_exists('row_attr', $this->options);
 
-        $repo = $this->doctrine->getRepository($this->options['data_class']);
-        if (!($repo instanceof EntityRepository)) {
-            throw new DataTableException('data_class should point to a Doctrine entity');
-        }
-
-        if (array_key_exists('query_builder', $this->options)) {
-            $qb = $this->options['query_builder']($repo, $query->get('order'), $query->get('search'));
-            if (!($qb instanceof QueryBuilder)) {
-                throw new DataTableException('query_builder option should return a Doctrine QueryBuilder');
-            }
-        } else {
-            $qb = $repo->createQueryBuilder('r');
-        }
-
-        $total = $this->getTotal($qb);
-
-        if ($query->has('start') && (int)$query->get('start') > 0) {
-            $qb->setFirstResult((int)$query->get('start'));
-        }
-        if ($query->has('length') && (int)$query->get('length') > 0) {
-            $qb->setMaxResults((int)$query->get('length'));
-        }
-
-        $result = $qb->getQuery()->getResult();
+        $total = $this->options['data_source']->getTotal();
+        $result = $this->options['data_source']->getData();
 
         $output = [
-            'draw' => ($query->has('draw') ? (int)$query->get('draw') : 1),
+            'draw' => ($this->request->query->has('draw') ? (int)$this->request->query->get('draw') : 1),
             'recordsTotal' => $total,
             'recordsFiltered' => $total,
             'data' => [],
@@ -207,7 +159,7 @@ class DataTable
             'processing' => true,
             'serverSide' => true,
             'ajax' => [
-                'url' => $this->router->generate($this->request->attributes->get('_route'), $this->request->attributes->get('_route_params')),
+                'url' => $this->request->getUri(),
                 'data' => [
                     'datatable_id' => $this->tableID,
                 ],

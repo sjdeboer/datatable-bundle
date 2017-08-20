@@ -8,8 +8,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Class ClosureType
  * @package Sjdeboer\DataTableBundle\ColumnType
  */
-class ClosureType extends ColumnType implements ColumnTypeInterface
+class ClosureType implements ColumnTypeInterface
 {
+    use ColumnTypeDefault;
+
     /** @var DataTableFactory */
     private $factory;
 

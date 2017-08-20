@@ -9,8 +9,10 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  * Class PropertyType
  * @package Sjdeboer\DataTableBundle\ColumnType
  */
-class PropertyType extends ColumnType implements ColumnTypeInterface
+class PropertyType implements ColumnTypeInterface
 {
+    use ColumnTypeDefault;
+
     /** @var DataTableFactory */
     private $factory;
 
